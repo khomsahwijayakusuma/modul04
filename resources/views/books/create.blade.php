@@ -7,7 +7,7 @@
 <div class="card">
 <div class="card-body">
 
-<form action="{{ route('books.store') }}" method="POST">
+<form action="{{ route('books.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
 
     <div class="mb-3">
@@ -21,6 +21,7 @@
             @endforeach
         </select>
     </div>
+
     <div class="mb-3">
         <label>Judul</label>
         <input type="text" name="judul" class="form-control">
@@ -39,6 +40,12 @@
     <div class="mb-3">
         <label>Stok</label>
         <input type="number" name="stok" class="form-control">
+    </div>
+
+    {{-- 🔥 TAMBAHAN GAMBAR --}}
+    <div class="mb-3">
+        <label>Gambar</label>
+        <input type="file" name="gambar" class="form-control">
     </div>
 
     <button class="btn btn-success">Simpan</button>

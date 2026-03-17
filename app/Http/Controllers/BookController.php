@@ -12,25 +12,19 @@ class BookController extends Controller
     {
         $query = Book::with('category');
 
-        // SEARCH JUDUL
         if ($request->judul) {
             $query->where('judul', 'like', '%' . $request->judul . '%');
         }
 
-        // FILTER CATEGORY
         if ($request->category_id) {
             $query->where('category_id', $request->category_id);
         }
 
         $books = $query->get();
 
-        // TOTAL SEMUA BOOK (sesuai hasil filter)
         $totalBooks = $books->count();
-
-        // AMBIL SEMUA CATEGORY
         $categories = Category::all();
 
-        // TOTAL BOOK PER CATEGORY
         $totalPerCategory = Book::selectRaw('category_id, count(*) as total')
             ->groupBy('category_id')
             ->pluck('total', 'category_id');
@@ -56,13 +50,20 @@ class BookController extends Controller
             'judul' => 'required',
             'penulis' => 'required',
             'tahun_terbit' => 'required|numeric',
-            'stok' => 'required|numeric'
+            'stok' => 'required|numeric',
+            'gambar' => 'image|mimes:jpg,png,jpeg|max:2048'
         ]);
 
-        Book::create($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('gambar')) {
+            $data['gambar'] = $request->file('gambar')->store('books', 'public');
+        }
+
+        Book::create($data);
 
         return redirect()->route('books.index')
-                ->with('success','Data berhasil ditambahkan');
+            ->with('success','Data berhasil ditambahkan');
     }
 
     public function edit(Book $book)
@@ -78,13 +79,20 @@ class BookController extends Controller
             'judul' => 'required',
             'penulis' => 'required',
             'tahun_terbit' => 'required|numeric',
-            'stok' => 'required|numeric'
+            'stok' => 'required|numeric',
+            'gambar' => 'image|mimes:jpg,png,jpeg|max:2048'
         ]);
 
-        $book->update($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('gambar')) {
+            $data['gambar'] = $request->file('gambar')->store('books', 'public');
+        }
+
+        $book->update($data);
 
         return redirect()->route('books.index')
-                ->with('success','Data berhasil diupdate');
+            ->with('success','Data berhasil diupdate');
     }
 
     public function destroy(Book $book)
@@ -92,6 +100,6 @@ class BookController extends Controller
         $book->delete();
 
         return redirect()->route('books.index')
-                ->with('success','Data berhasil dihapus');
+            ->with('success','Data berhasil dihapus');
     }
 }
