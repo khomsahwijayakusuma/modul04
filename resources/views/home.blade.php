@@ -2,6 +2,14 @@
 
 @section('content')
 
+{{-- LOGOUT BUTTON --}}
+<div class="d-flex justify-content-end mb-3">
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button class="btn btn-outline-danger">Logout</button>
+    </form>
+</div>
+
 {{-- HERO --}}
 <div class="p-5 mb-4 bg-light rounded-3 text-center" 
      style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1507842217343-583bb7270b66'); background-size: cover; color: white;">
